@@ -12,7 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.OneToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,31 +28,28 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-
 @NoArgsConstructor
 public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "userId", nullable = false, updatable = false)
 	private Long userId;
-	
 	private String username;
 	private String password;
 	private String firstName;
 	private String lastName;
-	
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
-	
 	private String phone;
 	private boolean enabled = true;
-	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<UserRole> userRoles = new HashSet<>();
 
+	@OneToOne
+	private Account account;
+	
 	public User(String firstName, String lastName , String username, String email, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
